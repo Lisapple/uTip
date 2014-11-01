@@ -1,0 +1,57 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+	#import <UIKit/UIKit.h>
+	#import <Foundation/Foundation.h>
+#endif
+
+CG_INLINE CATransform3D fieldOfViewTransform(float rad, float aspectRatio, float near, float far)
+{
+	float top = near * tanf(rad);
+	float bottom = -top;
+	float left = bottom * aspectRatio;
+	float right = top * aspectRatio;
+	
+	float a = 2 * near / (right - left);
+	float b = 2 * near / (top - bottom);
+	float c = (right + left) / (right - left);
+	float d = (top + bottom) / (top - bottom);
+	float e = - (far + near) / (far - near);
+	float f = -2 * far * near / (far - near);
+	
+	CATransform3D t = {
+		a,  0., 0., 0.,
+		0., b,  0., 0.,
+		c,  d,  e, -0.004,
+		0., 0., f,  1. };
+	return t;
+}
+
+CG_INLINE CATransform3D Transform3DMakePerspectiveRotation(CGFloat angle, CGFloat x, CGFloat y, CGFloat z)
+{
+	float aspectRatio = 1.;
+	float near = 1.;
+	float far = near * 10.;
+	return CATransform3DConcat(CATransform3DMakeRotation(angle, x, y, z),
+							   fieldOfViewTransform(M_PI_4, aspectRatio, near, far));
+}
+
+CG_INLINE CATransform3D Transform3DPerspectiveRotate(CATransform3D t, CGFloat angle, CGFloat x, CGFloat y, CGFloat z)
+{
+	float aspectRatio = 1.;
+	float near = 1.;
+	float far = near * 10.;
+	
+	return CATransform3DConcat(t, CATransform3DConcat(CATransform3DMakeRotation(angle, x, y, z),
+													  fieldOfViewTransform(M_PI_4, aspectRatio, near, far)));
+}
