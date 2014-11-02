@@ -1,4 +1,4 @@
-<img style="border-radius:20px;" src="Tip Tap/Tip Tap/Images.xcassets/AppIcon.appiconset/Icon-60@2x.png">
+<img style="border-radius:20px;" src="uTip/uTip/Images.xcassets/AppIcon.appiconset/Icon-60@2x.png">
 
 uTip
 =====
